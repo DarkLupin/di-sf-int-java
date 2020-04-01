@@ -1,11 +1,11 @@
 package students;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
+@FunctionalInterface
 interface StudentCriterion {
     boolean test(Student s);
+//    void doStuff();
 }
 
 class SmartCriterion implements StudentCriterion {
@@ -91,8 +91,14 @@ public class Main2 {
 //            }
 //        /*}*/));
 
-        showAll(getByCriterion(roster, (Student s) -> { return s.getGpa() < 3; } ));
-        
+//        showAll(getByCriterion(roster, (Student s) -> { return s.getGpa() < 3; } ));
+//        showAll(getByCriterion(roster, (s) -> { return s.getGpa() < 3; } ));
+        showAll(getByCriterion(roster, s -> { return s.getGpa() < 3; } ));
+// Lambdas with "other than one" argument MUST have parens
+        // () -> ....
+        // (a, b) -> ...
+        // x ->  // only ONE argument
+
         // ??? MUST BE an object of StudentCriterion type
         // Imagine ??? is "raw material" for an object, not the whole thing.
         // Compiler seek to create an instance of the right type from that raw material...
@@ -101,5 +107,34 @@ public class Main2 {
         // 2) That interface MUST declare EXACTLY ONE abstract method
         // 3) YOU ONLY want to implement that ONE abstract method
 
+        List<String> names = Arrays.asList("Jim", "Fred", "Sheila");
+        System.out.println("String is Comparable? " + ("hello" instanceof Comparable));
+        System.out.println(names);
+        Collections.sort(names);
+//        Collections.sort(roster);
+        System.out.println("----------------------");
+        System.out.println(names);
+        class BackwardComparator implements Comparator<String> {
+            @Override
+            public int compare(String s, String t1) {
+                return t1.compareTo(s);
+            }
+        }
+        Comparator<String> backwards = new BackwardComparator();
+        names.sort(backwards);
+        System.out.println("----------------------");
+        System.out.println(names);
+
+        names.sort((String s1, String s2) -> {return s1.compareTo(s2);});
+        System.out.println("----------------------");
+        System.out.println(names);
+
+        // Specify All arg types, or none...
+        // lambdas with curly braces are called "Block lambdas"
+        // those without are called "expression lambdas"
+//        names.sort((s1, s2) -> {return s1.compareTo(s2);});
+        names.sort((s1, s2) -> s1.compareTo(s2));
+        System.out.println("----------------------");
+        System.out.println(names);
     }
 }

@@ -21,6 +21,7 @@ public final class Student /*implements Comparable<Student>*/ { // All construct
             self.name = name;
             return this;
         }
+
         public StudentBuilder gpa(double gpa) {
             self.gpa = gpa;
             return this;
