@@ -1,6 +1,7 @@
 package students;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 interface Criterion<E> {
     boolean test(E e);
@@ -17,9 +18,9 @@ public class Main3 {
         return out;
     }
 
-    public static <T> void showAll(List<T> roster) {
+    public static <T> void showAll(Iterable<T> roster, Consumer<T> op) {
         for (T s : roster) {
-            System.out.println("> " + s);
+            op.accept(s);
         }
     }
 
@@ -31,7 +32,9 @@ public class Main3 {
                 Student.ofNameGpaCourses("Sheila", 3.9, "Math", "Physics", "Astrophysics", "Quantum Mechanics")
         );
 
-        showAll(getByCriterion(roster, s -> { return s.getGpa() < 3; } ));
+        showAll(
+                getByCriterion(roster, s -> { return s.getGpa() < 3; } ),
+                s -> System.out.println(">> " + s));
 
         List<String> longStrings = getByCriterion(
                 Arrays.asList("This", "is", "some", "words", "of", "varying", "lengths"),
@@ -41,6 +44,7 @@ public class Main3 {
         System.out.println("----------------");
         showAll(getByCriterion(
                 Arrays.asList("This", "is", "some", "words", "of", "varying", "lengths"),
-                string -> string.length() < 6));
+                string -> string.length() < 6),
+                s -> System.out.println("String: " + s));
     }
 }
