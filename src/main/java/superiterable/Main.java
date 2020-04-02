@@ -4,9 +4,16 @@ import students.Student;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.OptionalDouble;
 import java.util.stream.Stream;
 
 public class Main {
+    public static String toLetterGrade(Student s) {
+        double d = s.getGpa();
+        if (d > 3.5) return "A";
+        if (d > 3.0) return "B";
+        else return "C";
+    }
     public static void main(String[] args) {
         List<Student> r = Arrays.asList(
                 Student.ofNameGpaCourses("Fred", 3.2, "Math", "Physics"),
@@ -50,8 +57,59 @@ public class Main {
                 .flatMap(stu -> stu.getCourses().stream())
                 .forEach(stu -> System.out.println(stu));
 
-        System.out.println("----------------------");
-        ss
+//        System.out.println("----------------------");
+//        ss
+//                .forEach(stu -> System.out.println(stu));
+
+        System.out.println("1) ----------------------");
+        r.stream()
                 .forEach(stu -> System.out.println(stu));
+
+        System.out.println("2) ----------------------");
+        r.stream()
+                .filter(stu -> stu.getGpa() > 3)
+                .forEach(stu -> System.out.println(stu));
+
+        System.out.println("3) ----------------------");
+        r.stream()
+                .filter(stu -> stu.getGpa() < 3)
+                .map(stu -> stu.getName() + " has grade " + stu.getGpa())
+                .forEach(stu -> System.out.println(stu));
+
+        System.out.println("4) ----------------------");
+        r.stream()
+                .filter(stu -> stu.getGpa() < 3)
+                .map(stu -> stu.getName() + " has grade " + toLetterGrade(stu))
+                .forEach(stu -> System.out.println(stu));
+
+        System.out.println("5) ----------------------");
+        r.stream()
+                .flatMap(stu -> stu.getCourses().stream())
+                .forEach(stu -> System.out.println(stu));
+
+        System.out.println("6) ----------------------");
+        r.stream()
+                .flatMap(stu -> stu.getCourses().stream())
+                .distinct()
+                .forEach(stu -> System.out.println(stu));
+
+        System.out.println("7) ----------------------");
+        r.stream()
+                .flatMap(stu -> stu.getCourses().stream())
+                .distinct()
+                .sorted()
+                .forEach(stu -> System.out.println(stu));
+
+        System.out.println("8) ----------------------");
+        r.stream()
+                .flatMap(stu -> stu.getCourses().stream().map(c -> stu.getName() + " takes " + c))
+                .forEach(stu -> System.out.println(stu));
+
+        System.out.println("9) ----------------------");
+        /*OptionalDouble d = */r.stream()
+                .mapToDouble(stu -> stu.getGpa())
+                .average()/*;*/
+        /*d*/   .ifPresent(v -> System.out.println("Average is " + v));
+
     }
 }
