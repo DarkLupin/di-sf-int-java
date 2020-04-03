@@ -13,7 +13,7 @@ public class BadStream {
         IntStream.generate(() -> ThreadLocalRandom.current().nextInt(0, 100))
                 .parallel()
                 .limit(100_000_000)
-                .peek(x -> count[0]++)
+                .peek(x -> count[0]++) // mutating shared data!! BAD BAD
                 .forEach(x -> {})
         ;
         System.out.println("Final count is " + count[0]);
