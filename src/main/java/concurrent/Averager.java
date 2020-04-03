@@ -2,6 +2,7 @@ package concurrent;
 
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.DoubleStream;
 
 class Average {
     private double sum;
@@ -28,18 +29,24 @@ class Average {
 
 public class Averager {
     public static void main(String[] args) {
-        final long COUNT = 1_000_000_000;
+        final long COUNT = 2_000_000_000;
         long start = System.nanoTime();
-        ThreadLocalRandom.current().doubles(COUNT, -Math.PI, +Math.PI)
+//        ThreadLocalRandom.current().doubles(COUNT, -Math.PI, +Math.PI)
+        DoubleStream.iterate(0.0, x -> ThreadLocalRandom.current().nextDouble(-Math.PI, +Math.PI))
+//                .unordered()
                 .parallel()
+                .limit(COUNT)
                 .boxed()
 //                .mapToObj(d -> d)
-                .map(d -> Math.sin(d))
+//                .map(d -> Math.sin(d))
+//                .map(Math::sin)
                 .reduce(new Average(0, 0),
-                        (average, data) -> average.include(data),
-                        (av1, av2) -> av1.merge(av2))
+//                        (average, data) -> average.include(data),
+                        Average::include,
+                        Average::merge)
                 .get() // gets the actual
-                .ifPresent(av -> System.out.println("Average is " + av));
+                .map(av -> "Average is " + av)
+                .ifPresent(System.out::println);
 
         long time = System.nanoTime() - start;
         System.out.printf("Time was %7.2f seconds to process %d items. Rate is %d per microsecond\n",
